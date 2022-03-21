@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DBSettings>
+  <DB name="prueba_backend_william">
+    <Engine>postgres</Engine>
+    <Server>localhost</Server>
+    <Port>5432</Port>
+    <User>postgres</User>
+    <Password>123456</Password>
+    <Database>prueba_backend_william</Database>
+    <SslMode>disable</SslMode>
+  </DB>
+</DBSettings>
