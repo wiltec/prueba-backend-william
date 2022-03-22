@@ -1,20 +1,15 @@
 package main
 
-import "PruebaBackendWilliam/Infraestructure/DataBase"
+import (
+	"PruebaBackendWilliam/RestApi"
+	"PruebaBackendWilliam/Utils/DependencyInjector"
+)
 
 func main() {
 
-	dbHandler := DataBase.DBHandler{}
-	conn, err := dbHandler.Connect()
+	//Se crea las inyecciones de las dependencias
+	DependencyInjector.Injector()
 
-	if err != nil {
-
-		panic(err)
-	}
-
-	db, _ := conn.DB()
-
-	defer db.Close()
-
-	
+	//Se registran los servicios
+	RestApi.RegisterControllers()
 }

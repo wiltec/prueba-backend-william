@@ -13,7 +13,7 @@ import (
 )
 
 type DBHandler struct {
-	//IDHandler `inject:""`
+	IDHandler `inject:""`
 }
 
 var xmlPath = "../Infraestructure/Configuration/BDSetting.xml"
