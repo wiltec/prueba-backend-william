@@ -12,6 +12,7 @@ func RegisterControllers() bool {
 	var pruebaBackendRoutes Routes.PruebaBackendRoutes
 
 	pruebaBackendRoutes.PlayerPayments = DependencyInjector.PlayerPaymentsController
+	pruebaBackendRoutes.PlayerLevel = DependencyInjector.PlayerLevelController
 
 	pruebaBackendRoutes.RegisterRoutes(route)
 	port := "3001"

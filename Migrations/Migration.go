@@ -33,5 +33,9 @@ func GenerateMigration(context *gorm.DB) {
 	fmt.Println("\n\n========== CreateTable ! ==========")
 	AutoMigration.CreateTable(context)
 
+	//Carga valores por defecto
+	fmt.Println("\n\n========== LoadData ! ==========")
+	AutoMigration.LoadDefaultData(context)
+
 	fmt.Println("\n\n========== Proceso terminado exitosamente ! ==========")
 }

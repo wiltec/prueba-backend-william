@@ -30,6 +30,24 @@ func Injector() {
 		log.Fatal(errContainer)
 	}
 
+	/********Repositories********/
+	errContainer = RepositoriesInjector(&container)
+
+	//Verificamos si existe algún error
+	if errContainer != nil {
+
+		log.Fatal(errContainer)
+	}
+
+	/********Services********/
+	errContainer = ServicesInjector(&container)
+
+	//Verificamos si existe algún error
+	if errContainer != nil {
+
+		log.Fatal(errContainer)
+	}
+
 	//Si existe error poblamos el contenedor
 	if err := container.Populate(); err != nil {
 
