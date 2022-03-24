@@ -5,13 +5,15 @@ import (
 	"PruebaBackendWilliam/Dto/Request"
 	"PruebaBackendWilliam/Infraestructure/DataBase"
 	"PruebaBackendWilliam/Models"
+	IServices "PruebaBackendWilliam/Services/Interfaces"
 	MSG "PruebaBackendWilliam/Utils/Error/ErrorMessages"
 )
 
 //PlayerLevelService se crea un constructor donde se implementa la interfaz para la inyeccion de dependencias
 type PlayerLevelService struct {
-	Conn       DataBase.IDHandler                `inject:""`
-	Repository Interfaces.IPlayerLevelRepository `inject:""`
+	IServices.IPlayerLevelService `inject:""`
+	Conn                          DataBase.IDHandler                `inject:""`
+	Repository                    Interfaces.IPlayerLevelRepository `inject:""`
 }
 
 //CreatePlayerLevel es una funcion para crear un elemento en la base de datos

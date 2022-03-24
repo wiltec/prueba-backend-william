@@ -10,4 +10,5 @@ import (
 func PlayerPaymentsRoutes(route *gin.RouterGroup, playerPayments *Controllers.PlayerPaymentsController) {
 
 	route.POST("/calculateteampayments", playerPayments.CalculateTeamPayments)
+	route.POST("/calculateteampaymentsbylist", playerPayments.CalculateTeamPaymentsByList)
 }
