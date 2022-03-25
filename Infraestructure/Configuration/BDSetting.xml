@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DBSettings>
-  <DB name="prueba_backend_william">
+  <DB>
     <Engine>postgres</Engine>
     <Server>localhost</Server>
     <Port>5432</Port>

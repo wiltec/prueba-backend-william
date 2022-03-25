@@ -1,0 +1,39 @@
+- Requerimientos
+Lenguaje de programación: go
+Base de datos: postgres
+
+
+- Pasos para levantar el servicio API
+
+1) Crear una base de datos y especificar los parámetros de conexión en el archivo  /Infraestructure/Configuration/BDSetting.xml
+
+
+2) Ejecutar el archivo /Migration/Migration.go para crear el catálogo de niveles de jugador con los valores por defecto especificados en los 
+   requerimientos:
+
+    go run Migration.go
+    
+   Este paso solo se hace la primera vez o cada que se quiera crear la tabla de niveles
+
+
+3) Ejecutar el archivo /Main/PruebaBackendWilliam.go para levantar la API
+
+    go run PruebaBackendWilliam.go
+
+    se crearon los siguientes endpoints:
+
+    Calcular pagos jugador
+    POST   /v1/playerpayments/calculateteampayments  --> cálcula el sueldo final de una lista de jugadores
+    POST   /v1/playerpayments/calculateteampaymentsbylist --> cálcula el sueldo final de una lista de lista de jugadores 
+
+    CRUD cátalogo niveles
+    GET    /v1/playerlevel/retrieve --> devuelve todos los registros de la tabla
+    POST   /v1/playerlevel/create  --> crea un registo en la tabla
+    PUT    /v1/playerlevel/update  --> actualiza un registro en la tabla
+    DELETE /v1/playerlevel/delete  --> elimina un registro en la tabla
+
+    el servicio corre por defecto en el puerto 3001, si se desea cambiarlo se modifica el archivo /RestApi/RegisterController.go linea 19.
+
+4) Probar endpoints:
+   El archivo RequestWilliam.postman_collection.json contiene los request con los respectivos json para probar los endpoints con la 
+   herramienta postman, solo sería importarlo.
