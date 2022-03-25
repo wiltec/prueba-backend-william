@@ -69,6 +69,5 @@ func (dbh *DBHandler) Connect() (*gorm.DB, error) {
 	//Creamos la extension para uuid
 	db.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")
 
-	//Devolvemos la conexion abierta a la base de datos
 	return db, nil
 }

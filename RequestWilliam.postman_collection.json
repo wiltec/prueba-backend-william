@@ -1,0 +1,190 @@
+{
+	"info": {
+		"_postman_id": "05342496-b257-4952-ad6b-ff6b371cb1b4",
+		"name": "RequestWilliam",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PlayerLevel",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Name\":\"D\",\n    \"GoalMonth\":2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/v1/playerlevel/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerlevel",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"IdPlayerLevel\":\"aef16585-bb9b-4fb1-bf3c-af0f05823569\",\n    \"Name\":\"U\",\n    \"GoalMonth\":10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/v1/playerlevel/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerlevel",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"IdPlayerLevel\":\"aef16585-bb9b-4fb1-bf3c-af0f05823569\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/v1/playerlevel/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerlevel",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "retrieve",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3001/v1/playerlevel/retrieve",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerlevel",
+								"retrieve"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PlayerPayments",
+			"item": [
+				{
+					"name": "calculateteampayments",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Jugadores\": [\n        {\n            \"Nombre\":\"Juan Perez\",\n            \"Nivel\":\"C\",\n            \"Goles\": 10,\n            \"Sueldo\":50000,\n            \"Bono\": 2500,\n            \"Equipo\":\"rojo\"\n        },\n        {\n            \"Nombre\":\"El Cuauh\",\n            \"Nivel\":\"Cuauh\",\n            \"Goles\": 30,\n            \"Sueldo\":100000,\n            \"Bono\": 30000,\n            \"Equipo\":\"azul\"\n        },\n        {\n            \"Nombre\":\"Cosme Fulanito\",\n            \"Nivel\":\"A\",\n            \"Goles\": 7,\n            \"Sueldo\":20000,\n            \"Bono\": 10000,\n            \"Equipo\":\"azul\"\n        },\n        {\n            \"Nombre\":\"El Rulo\",\n            \"Nivel\":\"B\",\n            \"Goles\": 9,\n            \"Sueldo\":50000,\n            \"Bono\":1000,\n            \"Equipo\":\"rojo\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/v1/playerpayments/calculateteampayments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerpayments",
+								"calculateteampayments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "calculateteampaymentsbylist",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Equipos\": [\n        {\n            \"Jugadores\": [\n                {\n                    \"Nombre\":\"Juan\",\n                    \"Nivel\":\"A\",\n                    \"Goles\": 6,\n                    \"Sueldo\":50000,\n                    \"Bono\": 10000,\n                    \"Equipo\":\"siste\"\n                },\n                {\n                    \"Nombre\":\"Pedro\",\n                    \"Nivel\":\"B\",\n                    \"Goles\": 7,\n                    \"Sueldo\":10000,\n                    \"Bono\": 5000,\n                    \"Equipo\":\"siste\"\n                },\n                {\n                    \"Nombre\":\"Martín\",\n                    \"Nivel\":\"C\",\n                    \"Goles\": 16,\n                    \"Sueldo\":10000,\n                    \"Bono\": 5000,\n                    \"Equipo\":\"siste\"\n                },\n                {\n                    \"Nombre\":\"Luis\",\n                    \"Nivel\":\"Cuauh\",\n                    \"Goles\": 19,\n                    \"Sueldo\":50000,\n                    \"Bono\": 10000,\n                    \"Equipo\":\"siste\"\n                }\n            ]\n        },\n        {\n            \"Jugadores\": [\n                {\n                    \"Nombre\":\"Juan Perez\",\n                    \"Nivel\":\"C\",\n                    \"Goles\": 10,\n                    \"Sueldo\":50000,\n                    \"Bono\": 2500,\n                    \"Equipo\":\"rojo\"\n                },\n                {\n                    \"Nombre\":\"El Cuauh\",\n                    \"Nivel\":\"Cuauh\",\n                    \"Goles\": 30,\n                    \"Sueldo\":100000,\n                    \"Bono\": 30000,\n                    \"Equipo\":\"azul\"\n                },\n                {\n                    \"Nombre\":\"Cosme Fulanito\",\n                    \"Nivel\":\"A\",\n                    \"Goles\": 7,\n                    \"Sueldo\":20000,\n                    \"Bono\": 10000,\n                    \"Equipo\":\"azul\"\n                },\n                {\n                    \"Nombre\":\"El Rulo\",\n                    \"Nivel\":\"B\",\n                    \"Goles\": 9,\n                    \"Sueldo\":30000,\n                    \"Bono\":15000,\n                    \"Equipo\":\"rojo\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3001/v1/playerpayments/calculateteampaymentsbylist",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3001",
+							"path": [
+								"v1",
+								"playerpayments",
+								"calculateteampaymentsbylist"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

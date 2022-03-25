@@ -44,5 +44,4 @@ func LoadDefaultData(db *gorm.DB) {
 
 		db.Where(&playerLevelModel).FirstOrCreate(&playerLevelModel)
 	}
-
 }

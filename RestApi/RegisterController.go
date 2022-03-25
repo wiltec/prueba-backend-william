@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//RegisterControllers: registra los controladores para enlazarlos con las rutas
 func RegisterControllers() bool {
 	route := gin.Default()
 	var pruebaBackendRoutes Routes.PruebaBackendRoutes

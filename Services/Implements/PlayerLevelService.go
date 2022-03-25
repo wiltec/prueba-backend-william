@@ -1,22 +1,60 @@
 package Implements
 
 import (
+	IQuery "PruebaBackendWilliam/DataAccess/Queries/Interfaces"
 	"PruebaBackendWilliam/DataAccess/Repositories/Interfaces"
 	"PruebaBackendWilliam/Dto/Request"
+	"PruebaBackendWilliam/Dto/Response"
 	"PruebaBackendWilliam/Infraestructure/DataBase"
 	"PruebaBackendWilliam/Models"
 	IServices "PruebaBackendWilliam/Services/Interfaces"
 	MSG "PruebaBackendWilliam/Utils/Error/ErrorMessages"
+	IValidator "PruebaBackendWilliam/Validators/Interfaces"
 )
 
-//PlayerLevelService se crea un constructor donde se implementa la interfaz para la inyeccion de dependencias
 type PlayerLevelService struct {
 	IServices.IPlayerLevelService `inject:""`
 	Conn                          DataBase.IDHandler                `inject:""`
 	Repository                    Interfaces.IPlayerLevelRepository `inject:""`
+	Query                         IQuery.IPlayerLevelQuery          `inject:""`
+	Validator                     IValidator.IPlayerLevelValidator  `inject:""`
 }
 
-//CreatePlayerLevel es una funcion para crear un elemento en la base de datos
+//RetrievePlayerLevel: es una función que consulta todos los registros
+func (service *PlayerLevelService) RetrievePlayerLevel() []Response.PlayerLevelResponse {
+
+	db, err := service.Conn.Connect()
+
+	//Verificamos que no exista ningun problema con la conexion a la base de datos
+	if err != nil {
+		//Tiramos el panic para cerrar todos los procesos
+		panic(err)
+	}
+
+	conn, _ := db.DB()
+
+	defer conn.Close()
+
+	arrayResponse := []Response.PlayerLevelResponse{}
+
+	arrayModel := service.Query.RetrievePlayerLevel(db)
+
+	for _, item := range arrayModel {
+
+		response := Response.PlayerLevelResponse{
+			IdPlayerLevel: item.IdPlayerLevel,
+			Name:          item.Name,
+			GoalMonth:     item.GoalMonth,
+		}
+
+		arrayResponse = append(arrayResponse, response)
+	}
+
+	return arrayResponse
+
+}
+
+//CreatePlayerLevel: es una funcion para crear un elemento en la base de datos
 func (service *PlayerLevelService) CreatePlayerLevel(request *Request.CreatePlayerLevelRequest) (bool, MSG.MessageValidator) {
 
 	db, err := service.Conn.Connect()
@@ -34,35 +72,25 @@ func (service *PlayerLevelService) CreatePlayerLevel(request *Request.CreatePlay
 	model := Models.PlayerLevelModel{}
 
 	//Volcamos los datos del request al modelo
-	//copier.Copy(&model, request)
 	model.Name = request.Name
 	model.GoalMonth = request.GoalMonth
 
-	/* if resp, msg := service.Validator.ValidateCreatePermission(&model, oAuthContext, conn); !resp {
+	//validamos los datos
+	if resp, msg := service.Validator.ValidateCreatePlayerLevel(&model, db); !resp {
 
-		// se retorna el error
-		return false, msg
+		return resp, msg
 	}
-
-	//validamos los datos del modelo, sus relaciones y lo necesario para que se cree
-	if resp, msg := service.Validator.ValidateCreatePlayerLevel(&model, conn); !resp {
-
-		// se retorna el error
-		return false, msg
-	} */
 
 	if ok, err := service.Repository.CreatePlayerLevel(&model, db); !ok {
 
-		//Si existe algun error, entonces enviamos el mensaje correspondiente
 		return false, err
 	}
 
-	//Regresamos el id del modelo insertado y regresamos un mensaje, dependiendo del tipo de error
 	return MSG.NewWithBool(MSG.Successfull, model.IdPlayerLevel)
 
 }
 
-//UpdatePlayerLevel es una funcion para actualizar un elemento en la base de datos
+//UpdatePlayerLevel: es una funcion para actualizar un elemento en la base de datos
 func (service *PlayerLevelService) UpdatePlayerLevel(request *Request.UpdatePlayerLevelRequest) (bool, MSG.MessageValidator) {
 
 	db, err := service.Conn.Connect()
@@ -77,12 +105,16 @@ func (service *PlayerLevelService) UpdatePlayerLevel(request *Request.UpdatePlay
 
 	defer conn.Close()
 
-	//Verificamos el id
-	if len(request.IdPlayerLevel) <= 0 {
+	model := Models.PlayerLevelModel{
+		IdPlayerLevel: request.IdPlayerLevel,
+		Name:          request.Name,
+		GoalMonth:     request.GoalMonth,
+	}
 
-		// Si no se envía el id retornamos false y el mensaje de error
-		return MSG.NewWithBool(MSG.Data_Not_Found, "IdPlayerLevel", "There is no PlayerLevel indicated")
+	//validamos los datos
+	if resp, msg := service.Validator.ValidateUpdatePlayerLevel(&model, db); !resp {
 
+		return resp, msg
 	}
 
 	arrayModel := []Models.PlayerLevelModel{}
@@ -90,42 +122,26 @@ func (service *PlayerLevelService) UpdatePlayerLevel(request *Request.UpdatePlay
 
 	if len(arrayModel) <= 0 {
 
-		// Si no existe el elmento retornamos false y el mensaje de error
 		return MSG.NewWithBool(MSG.Data_Not_Found, "IdPlayerLevel", "Data not found")
 	}
 
 	//Declaramos un modelo, el cual el resultado de la consulta
-	model := arrayModel[0]
+	modelCurrent := arrayModel[0]
 
-	model.GoalMonth = request.GoalMonth
-	model.Name = request.Name
-
-	//Verificamos que no se duplique la información y si existen cada uno de los Id's de las tablas relacionadas.
-	/* resp, msg := service.Validator.ValidateUpdatePlayerLevel(&model, db)
-
-	if !resp {
-
-		// retorna false y el mensaje de error
-		return false, msg
-	} */
+	modelCurrent.GoalMonth = model.GoalMonth
+	modelCurrent.Name = model.Name
 
 	//Realizamos la actualizacion del modelo por medio del repository
-	if ok, message := service.Repository.UpdatePlayerLevel(&model, db); !ok {
+	if ok, message := service.Repository.UpdatePlayerLevel(&modelCurrent, db); !ok {
 
-		//Si existe algun error, entonces enviamos el mensaje correspondiente
 		return false, message
 	}
 
-	//Devolvemos una respuesta boleana para afirmar la actualizacion, y el mensaje de exito
 	return MSG.NewWithBool(MSG.Successfull)
 }
 
 //DeletePlayerLevel es una funcion para eliminar un elemento en la base de datos
 func (service *PlayerLevelService) DeletePlayerLevel(request *Request.DeletePlayerLevelRequest) (bool, MSG.MessageValidator) {
-
-	model := Models.PlayerLevelModel{
-		IdPlayerLevel: request.IdPlayerLevel,
-	}
 
 	db, err := service.Conn.Connect()
 
@@ -139,20 +155,20 @@ func (service *PlayerLevelService) DeletePlayerLevel(request *Request.DeletePlay
 
 	defer conn.Close()
 
-	/* if response, message := service.Validator.ValidateDeletePlayerLevel(&model, conn); !response {
+	model := Models.PlayerLevelModel{
+		IdPlayerLevel: request.IdPlayerLevel,
+	}
 
-		//retornamos false y elmensaje de error
+	if response, message := service.Validator.ValidateDeletePlayerLevel(&model, db); !response {
+
 		return response, message
-	} */
+	}
 
 	//ejecutamos el delete
 	if ok, message := service.Repository.DeletePlayerLevel(&model, db); !ok {
 
-		//Si existe algun error, entonces enviamos el mensaje correspondiente
 		return false, message
 	}
 
-	// retornamos  true, y el mensaje sucess
 	return MSG.NewWithBool(MSG.Successfull, "PlayerLevel", "Record deleted")
-
 }

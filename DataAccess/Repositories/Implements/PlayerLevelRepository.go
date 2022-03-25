@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// PlayerLevelRepository se crea un constructor donde se implementa la interfaz para la inyeccion de dependencias
 type PlayerLevelRepository struct {
 	Interfaces.IPlayerLevelRepository `inject:""`
 	HelperRepository                  Interfaces.IHelperRespository `inject:""`
@@ -19,7 +18,6 @@ func (repository *PlayerLevelRepository) CreatePlayerLevel(model *Models.PlayerL
 
 	er := db.Create(model).Error
 
-	// retornamos el estado y el error en el caso de que exista
 	return repository.HelperRepository.GetMsg(er, "PlayerLevel", false)
 }
 
@@ -28,7 +26,6 @@ func (repository *PlayerLevelRepository) UpdatePlayerLevel(model *Models.PlayerL
 
 	er := db.Save(model).Error
 
-	// retornamos el estado y el error en el caso de que exista
 	return repository.HelperRepository.GetMsg(er, "PlayerLevel", false)
 }
 
@@ -37,6 +34,5 @@ func (repository *PlayerLevelRepository) DeletePlayerLevel(model *Models.PlayerL
 
 	er := db.Delete(model).Error
 
-	// retornamos el estado y el error en el caso de que exista
 	return repository.HelperRepository.GetMsg(er, "PlayerLevel", false)
 }

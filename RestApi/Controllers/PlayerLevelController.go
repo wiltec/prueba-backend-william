@@ -12,6 +12,15 @@ type PlayerLevelController struct {
 	Service Interfaces.IPlayerLevelService `inject:""`
 }
 
+//RetrievePlayerLevel: Metodo GET para obtener todos los registros de un playerLevel
+func (controller *PlayerLevelController) RetrievePlayerLevel(context *gin.Context) {
+
+	response := controller.Service.RetrievePlayerLevel()
+
+	context.JSON(http.StatusOK, response)
+}
+
+//CreatePlayerLevel: Metodo POST para crear un PlayerLevel
 func (controller *PlayerLevelController) CreatePlayerLevel(context *gin.Context) {
 	var request Request.CreatePlayerLevelRequest
 	context.Bind(&request)
@@ -26,7 +35,7 @@ func (controller *PlayerLevelController) CreatePlayerLevel(context *gin.Context)
 	}
 }
 
-//UpdatePlayerLevel Metodo PUT para editar un PlayerLevel
+//UpdatePlayerLevel: Metodo PUT para editar un PlayerLevel
 func (controller *PlayerLevelController) UpdatePlayerLevel(context *gin.Context) {
 
 	var request Request.UpdatePlayerLevelRequest
@@ -42,7 +51,7 @@ func (controller *PlayerLevelController) UpdatePlayerLevel(context *gin.Context)
 	}
 }
 
-//DeletePlayerLevel Metodo DELETE para eliminar un PlayerLevel
+//DeletePlayerLevel: Metodo DELETE para eliminar un PlayerLevel
 func (controller *PlayerLevelController) DeletePlayerLevel(context *gin.Context) {
 
 	var request Request.DeletePlayerLevelRequest

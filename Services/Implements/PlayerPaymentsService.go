@@ -6,17 +6,19 @@ import (
 	"PruebaBackendWilliam/Infraestructure/DataBase"
 	"PruebaBackendWilliam/Models"
 	"PruebaBackendWilliam/Services/Interfaces"
+	IValidators "PruebaBackendWilliam/Validators/Interfaces"
 
 	"gorm.io/gorm"
 )
 
-//PlayerPaymentsService se crea un constructor donde se implementa la interfaz para la inyeccion de dependencias
 type PlayerPaymentsService struct {
 	Interfaces.IPlayerPaymentsService `inhject:""`
-	Conn                              DataBase.IDHandler `inject:""`
+	Conn                              DataBase.IDHandler                   `inject:""`
+	Validator                         IValidators.IPlayerPaymentsValidator `inject:""`
 }
 
-func (service *PlayerPaymentsService) CalculateTeamPayments(request *Request.CalculateTeamPaymentsRequest) Response.CalculateTeamPaymentsResponse {
+//CalculateTeamPayments: función que cálcula el salario final de una lista de jugadores
+func (service *PlayerPaymentsService) CalculateTeamPayments(request *Request.CalculateTeamPaymentsRequest) (bool, interface{}) {
 
 	db, err := service.Conn.Connect()
 
@@ -30,15 +32,13 @@ func (service *PlayerPaymentsService) CalculateTeamPayments(request *Request.Cal
 
 	defer conn.Close()
 
-	//response := Response.CalculateTeamPaymentsResponse{}
+	//Validaciones de los datos de entrada
+	if resp, msg := service.Validator.CalculateTeamPaymentsValidator(request, db); !resp {
 
-	/*//validamos los datos del modelo, sus relaciones y lo necesario para que se cree
-	if resp, msg := service.Validator.ValidateCreatePlayerPayments(&model, conn); !resp {
+		return resp, msg
+	}
 
-		// se retorna el error
-		return false, msg
-	} */
-
+	//Obtenemos el salario completo de cada jugador
 	listPlayerSalaryTemp := service.CalculateFullSalary(request.Jugadores, db)
 
 	response := Response.CalculateTeamPaymentsResponse{}
@@ -62,10 +62,11 @@ func (service *PlayerPaymentsService) CalculateTeamPayments(request *Request.Cal
 
 	response.Jugadores = listPlayerResponse
 
-	return response
+	return true, response
 }
 
-func (service *PlayerPaymentsService) CalculateTeamPaymentsByList(request *Request.CalculateTeamPaymentsByListRequest) Response.CalculateTeamPaymentsByListResponse {
+//CalculateTeamPaymentsByList: función que cálcula el salario final de una lista de lista de jugadores
+func (service *PlayerPaymentsService) CalculateTeamPaymentsByList(request *Request.CalculateTeamPaymentsByListRequest) (bool, interface{}) {
 
 	db, err := service.Conn.Connect()
 
@@ -79,20 +80,18 @@ func (service *PlayerPaymentsService) CalculateTeamPaymentsByList(request *Reque
 
 	defer conn.Close()
 
-	//response := Response.CalculateTeamPaymentsResponse{}
+	//Validaciones de los datos de entrada
+	if resp, msg := service.Validator.CalculateTeamPaymentsByListValidator(request, db); !resp {
 
-	/*//validamos los datos del modelo, sus relaciones y lo necesario para que se cree
-	if resp, msg := service.Validator.ValidateCreatePlayerPayments(&model, conn); !resp {
-
-		// se retorna el error
-		return false, msg
-	} */
+		return resp, msg
+	}
 
 	response := Response.CalculateTeamPaymentsByListResponse{}
 	ListCalculateTeamPaymentsResponse := []Response.CalculateTeamPaymentsResponse{}
 
 	listArrayPlayerSalaryTemp := []Models.ArrayPlayerSalaryTemp{}
 
+	//Obtenemos el salario completo de cada lista de jugadores
 	for _, item := range request.Equipos {
 
 		listPlayerSalaryTemp := service.CalculateFullSalary(item.Jugadores, db)
@@ -104,6 +103,7 @@ func (service *PlayerPaymentsService) CalculateTeamPaymentsByList(request *Reque
 		listArrayPlayerSalaryTemp = append(listArrayPlayerSalaryTemp, arrayPlayerSalaryTemp)
 	}
 
+	//Agregamos a una lista de lista de jugadores de tipo response
 	for _, arrayPlayerSalaryTemp := range listArrayPlayerSalaryTemp {
 
 		calculateTeamPaymentResponse := Response.CalculateTeamPaymentsResponse{}
@@ -132,9 +132,10 @@ func (service *PlayerPaymentsService) CalculateTeamPaymentsByList(request *Reque
 
 	response.Equipos = ListCalculateTeamPaymentsResponse
 
-	return response
+	return true, response
 }
 
+//CalculateFullSalary: establece una lista temporal con los datos de entrada
 func (service *PlayerPaymentsService) CalculateFullSalary(players []Request.PlayerRequest, db *gorm.DB) []Models.PlayerSalaryTemp {
 
 	//Obtenemos el catálogo de niveles de jugador
@@ -189,6 +190,7 @@ func (service *PlayerPaymentsService) CalculateFullSalary(players []Request.Play
 	return listPlayerSalaryTemp
 }
 
+//GetPlayerLevel: Obtiene el catálogo de niveles
 func (service *PlayerPaymentsService) GetPlayerLevel(db *gorm.DB) map[string]int {
 
 	//Declarmos un map para devolver los valores
@@ -209,6 +211,7 @@ func (service *PlayerPaymentsService) GetPlayerLevel(db *gorm.DB) map[string]int
 	return mapPlayerLevel
 }
 
+//CalculateBonusPercentage: Cálcula el porcentaje del bono
 func (service *PlayerPaymentsService) CalculateBonusPercentage(goalsScored float32, minimumGoals float32) float32 {
 
 	var percentage float32
@@ -223,6 +226,7 @@ func (service *PlayerPaymentsService) CalculateBonusPercentage(goalsScored float
 	return percentage
 }
 
+//GetFullSalary: cálcula el salario final del jugador
 func (service *PlayerPaymentsService) GetFullSalary(teamPercentage float32, listPlayer *[]Models.PlayerSalaryTemp) *[]Models.PlayerSalaryTemp {
 
 	for i := 0; i < len(*listPlayer); i++ {

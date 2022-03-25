@@ -13,6 +13,7 @@ const (
 	Successfull      string = "999"
 )
 
+//ReturnMessage: retorna un texto de acuerdo al código de error pasado
 func ReturnMessage(code string) string {
 	switch code {
 	case Id_Not_Found:

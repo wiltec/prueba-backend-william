@@ -2,10 +2,12 @@ package Interfaces
 
 import (
 	"PruebaBackendWilliam/Dto/Request"
-	"PruebaBackendWilliam/Dto/Response"
+
+	"gorm.io/gorm"
 )
 
 type IPlayerPaymentsService interface {
-	CalculateTeamPayments(request *Request.CalculateTeamPaymentsRequest) Response.CalculateTeamPaymentsResponse
-	CalculateTeamPaymentsByList(request *Request.CalculateTeamPaymentsByListRequest) Response.CalculateTeamPaymentsByListResponse
+	CalculateTeamPayments(request *Request.CalculateTeamPaymentsRequest) (bool, interface{})
+	CalculateTeamPaymentsByList(request *Request.CalculateTeamPaymentsByListRequest) (bool, interface{})
+	GetPlayerLevel(db *gorm.DB) map[string]int
 }

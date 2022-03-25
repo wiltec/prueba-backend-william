@@ -48,6 +48,24 @@ func Injector() {
 		log.Fatal(errContainer)
 	}
 
+	/********Validators********/
+	errContainer = ValidatorInjector(&container)
+
+	//Verificamos si existe algún error
+	if errContainer != nil {
+
+		log.Fatal(errContainer)
+	}
+
+	/********Querys********/
+	errContainer = QueryInjector(&container)
+
+	//Verificamos si existe algún error
+	if errContainer != nil {
+
+		log.Fatal(errContainer)
+	}
+
 	//Si existe error poblamos el contenedor
 	if err := container.Populate(); err != nil {
 
